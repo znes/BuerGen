@@ -20,7 +20,6 @@ class OepParser(object):
 
         try:
             request_and_response(self.taburl, 'get', 200)
-            print("Table does exist.")
             return True
 
         except AssertionError:
@@ -43,14 +42,16 @@ class OepParser(object):
 
             request_and_response(self.taburl + call, 'put', 201,
                                  body=body, token=self.token)
+            print("Successfully inserted data at index {}.".format(index))
 
         except AssertionError:
-            print("Oops, could not insert data.".format(index))
+            print("Oops, could not insert data at index {}.".format(index))
 
     def delete_table(self):
 
         try:
             request_and_response(self.taburl, 'del', 200, token=self.token)
+            print("Table deleted.")
 
         except AssertionError:
             print("Oops, could not delete table.")
