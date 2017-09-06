@@ -70,7 +70,7 @@ def main(**arguments):
     if p.check_table_exists():
 
         msg = "[-] Unfortunately this table does already exist.\n" \
-            "Do you want to delete it?"
+            "[?] Do you want to delete it?"
 
         if yes_or_no(msg):
             p.delete_table()
