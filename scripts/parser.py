@@ -33,12 +33,12 @@ Options:
 
 import json
 import pandas as pd
+from time import sleep
+from sys import stdout
 from docopt import docopt
-
 from buergen.oep.parser import OepParser
 from buergen.oep.io import request_and_response
 from buergen.helper import yes_or_no
-from sys import stdout
 
 
 APIURL = "http://oep.iks.cs.ovgu.de/api/v0/"
@@ -84,6 +84,7 @@ def main(**arguments):
         s.index = s.index.str.lower()
         body = {"query": s.to_dict()}
         p.insert_into_table(body=body, index=ix)
+        sleep(20)
 
 
 if __name__ == '__main__':
