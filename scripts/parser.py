@@ -69,8 +69,8 @@ def main(**arguments):
     print("[+] Creating table.")
     if p.check_table_exists():
 
-        msg = "[-] Unfortunately this table does already exist.\n" \
-            "[?] Do you want to delete it?"
+        msg = "[-] Unfortunately table {} does already exist.\n".format(
+            arguments['--table']) + "[?] Do you want to delete it?"
 
         if yes_or_no(msg):
             p.delete_table()
@@ -83,8 +83,7 @@ def main(**arguments):
     for ix, s in data.iterrows():
         s.index = s.index.str.lower()
         body = {"query": s.to_dict()}
-        p.insert_into_table(body=body, index=ix)
-        sleep(20)
+        p.insert_into_table(body=body, index=ix+1)
 
 
 if __name__ == '__main__':
