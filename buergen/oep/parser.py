@@ -37,7 +37,7 @@ class OepParser(object):
     def insert_into_table(self, body, index=None):
 
         #TODO other http request on new
-        call = "rows/" + str(index + 1) if index else "rows/new"
+        call = "rows/" + str(index) if index else "rows/new"
 
         try:
 
