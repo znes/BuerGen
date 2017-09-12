@@ -34,19 +34,18 @@ class OepParser(object):
         except AssertionError:
             logging.exception("Oops, table could not be created.")
 
-    def insert_into_table(self, body, index=None):
+    def insert_into_table(self, body):
 
-        # TODO other http request on new
-        call = "rows/" + str(index) if index else "rows/new"
+        call = "rows/new"
 
         try:
 
-            request_and_response('PUT', self.taburl + call, 201,
+            request_and_response('POST', self.taburl + call, 201,
                                  body=body, token=self.token)
-            logging.info("Successfully inserted data at index {}.".format(index))
+            logging.info("Successfully inserted data.")
 
         except AssertionError:
-            logging.exception("Oops, could not insert data at index {}.".format(index))
+            logging.exception("Oops, could not insert data at index.")
 
     def delete_table(self):
 
