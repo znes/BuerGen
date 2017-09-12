@@ -39,10 +39,10 @@ import pandas as pd
 from docopt import docopt
 from buergen.oep.parser import OepParser
 from buergen.helper import yes_or_no
+from django.contrib.gis.geos import GEOSGeometry
 
 
 APIURL = "http://oep.iks.cs.ovgu.de/api/v0/"
-
 
 def read_table_definition(**arguments):
     with open(arguments['DEFN'], 'r') as f:
@@ -51,7 +51,9 @@ def read_table_definition(**arguments):
 
 
 def read_data(**arguments):
-    df = pd.read_csv(arguments['DATA'], dtype=str)
+    def read_geom(i):
+        return str(GEOSGeometry(i, srid=25832))
+    df = pd.read_csv(arguments['DATA'], dtype=str, converters={'geom': read_geom})
     return df
 
 
@@ -84,14 +86,14 @@ def main(**arguments):
     p.create_table(body=defn)
 
     logging.info("Start inserting data.")
-    for ix, s in data.iterrows():
-        s.index = s.index.str.lower()
-        body = {"query": s.to_dict()}
-        p.insert_into_table(body=body, index=ix+1)
+    data.columns = data.columns.str.lower()
+    records = data.to_dict(orient='records')
+    p.insert_into_table(body={'query': records})
 
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='parser.py v0.1')
+    logging.basicConfig(level='DEBUG')
     logging.info('Starting parser.py!')
     main(**arguments)
     logging.info('Done!!!')

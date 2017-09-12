@@ -14,6 +14,7 @@ setup(name='buergen',
       install_requires=[
         'docopt',
         'pandas',
-        'requests'],
+        'requests',
+        'django'],
       extras_require={}
       )
