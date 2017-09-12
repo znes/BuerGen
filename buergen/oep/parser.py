@@ -1,6 +1,6 @@
 """
 """
-
+import logging
 from .io import request_and_response
 
 
@@ -23,7 +23,7 @@ class OepParser(object):
             return True
 
         except AssertionError:
-            print("Table does not exist yet.")
+            logging.exception("Table does not exist yet.")
 
     def create_table(self, body):
 
@@ -32,7 +32,7 @@ class OepParser(object):
                                  token=self.token)
 
         except AssertionError:
-            print("Oops, table could not be created.")
+            logging.exception("Oops, table could not be created.")
 
     def insert_into_table(self, body, index=None):
 
@@ -43,16 +43,16 @@ class OepParser(object):
 
             request_and_response('PUT', self.taburl + call, 201,
                                  body=body, token=self.token)
-            print("Successfully inserted data at index {}.".format(index))
+            logging.info("Successfully inserted data at index {}.".format(index))
 
         except AssertionError:
-            print("Oops, could not insert data at index {}.".format(index))
+            logging.exception("Oops, could not insert data at index {}.".format(index))
 
     def delete_table(self):
 
         try:
             request_and_response('DELETE', self.taburl, 200, token=self.token)
-            print("Table deleted.")
+            logging.info("Table deleted.")
 
         except AssertionError:
-            print("Oops, could not delete table.")
+            logging.exception("Oops, could not delete table.")

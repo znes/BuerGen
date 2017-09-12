@@ -18,12 +18,14 @@ Options:
   -h --help                  Show this screen and exit.
   -s --schema=SCHEMA         Name of the OEP schema. [default: model_draft]
   -t --table=TABLE           Name of the OEP table. [default: buergen_test]
+  -l, --loglevel=LOGLEVEL    Set the loglevel. Should be one of DEBUG, INFO,
+                             WARNING, ERROR or CRITICAL. [default: INFO]
      --token=TOKEN           Authentication token provided by the OEP.
      --sep=SEP               Delimiter used in CSV-files. [default: ,]
 
 """
 
-#arguments = {
+# arguments = {
 #    "DATA" : "/home/martin/buergen/buergen_repository/buergen/data/Widerstand_Protestinhalt_Netzausbau.csv",
 #    "DEFN" : "/home/martin/buergen/buergen_repository/buergen/data/Widerstand_Protestinhalt_Netzausbau.json",
 #    "--schema" : "model_draft",
@@ -32,21 +34,21 @@ Options:
 #    "SEP" : ","}
 
 import json
+import logging
 import pandas as pd
-from time import sleep
-from sys import stdout
 from docopt import docopt
 from buergen.oep.parser import OepParser
-from buergen.oep.io import request_and_response
 from buergen.helper import yes_or_no
 
 
 APIURL = "http://oep.iks.cs.ovgu.de/api/v0/"
 
+
 def read_table_definition(**arguments):
     with open(arguments['DEFN'], 'r') as f:
         defn = json.load(f)
     return defn
+
 
 def read_data(**arguments):
     df = pd.read_csv(arguments['DATA'], dtype=str)
@@ -55,10 +57,10 @@ def read_data(**arguments):
 
 def main(**arguments):
 
-    print("[+] Reading table definition.")
+    logging.info("Reading table definition.")
     defn = read_table_definition(**arguments)
 
-    print("[+] Reading table data.")
+    logging.info("Reading table data.")
     data = read_data(**arguments)
 
     p = OepParser(apiurl=APIURL,
@@ -66,11 +68,13 @@ def main(**arguments):
                   table=arguments['--table'],
                   token=arguments['--token'])
 
-    print("[+] Creating table.")
+    logging.info("Creating table.")
     if p.check_table_exists():
 
-        msg = "[-] Unfortunately table {} does already exist.\n".format(
-            arguments['--table']) + "[?] Do you want to delete it?"
+        logging.warning("Unfortunately table {} does already exist.".format(
+            arguments['--table']))
+
+        msg = "Do you want to delete it?"
 
         if yes_or_no(msg):
             p.delete_table()
@@ -79,7 +83,7 @@ def main(**arguments):
 
     p.create_table(body=defn)
 
-    print("[+] Start inserting data.")
+    logging.info("Start inserting data.")
     for ix, s in data.iterrows():
         s.index = s.index.str.lower()
         body = {"query": s.to_dict()}
@@ -88,6 +92,6 @@ def main(**arguments):
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='parser.py v0.1')
-    print('Startng parser.py!')
+    logging.info('Starting parser.py!')
     main(**arguments)
-    print('Done!!!')
+    logging.info('Done!!!')
