@@ -19,7 +19,7 @@ class OepParser(object):
     def check_table_exists(self):
 
         try:
-            request_and_response(self.taburl, 'get', 200)
+            request_and_response('GET', self.taburl, 200)
             return True
 
         except AssertionError:
@@ -28,7 +28,7 @@ class OepParser(object):
     def create_table(self, body):
 
         try:
-            request_and_response(self.taburl, 'put', 201, body=body,
+            request_and_response('PUT', self.taburl, 201, body=body,
                                  token=self.token)
 
         except AssertionError:
@@ -36,12 +36,12 @@ class OepParser(object):
 
     def insert_into_table(self, body, index=None):
 
-        #TODO other http request on new
+        # TODO other http request on new
         call = "rows/" + str(index) if index else "rows/new"
 
         try:
 
-            request_and_response(self.taburl + call, 'put', 201,
+            request_and_response('PUT', self.taburl + call, 201,
                                  body=body, token=self.token)
             print("Successfully inserted data at index {}.".format(index))
 
@@ -51,7 +51,7 @@ class OepParser(object):
     def delete_table(self):
 
         try:
-            request_and_response(self.taburl, 'del', 200, token=self.token)
+            request_and_response('DELETE', self.taburl, 200, token=self.token)
             print("Table deleted.")
 
         except AssertionError:

@@ -11,7 +11,7 @@ def w_additional_argument(f, key, value):
     return wrapper
 
 
-def request_and_response(url, method, status_code, body=None, token=None):
+def request_and_response(method, url, status_code, body=None, token=None):
     """ Send HTTP-request to the OpenEnergyPlatform API. Returns a
         `requests.Response` object.
 
@@ -19,10 +19,10 @@ def request_and_response(url, method, status_code, body=None, token=None):
     Parameters
     ----------
 
-    url : str
-        Web address.
     method : str
         HTTP method.
+    url : str
+        Web address.
     body : dict
         Data send in JSON-format.
     token : str
@@ -42,12 +42,7 @@ def request_and_response(url, method, status_code, body=None, token=None):
         Expected HTTP code does not match actual response status code.
     """
 
-    http_methods = {'get': requests.get,
-                    'put': requests.put,
-                    'post': requests.post,
-                    'del': requests.delete}
-
-    f = http_methods[method]
+    f = requests.request
 
     if token:
 
@@ -58,7 +53,7 @@ def request_and_response(url, method, status_code, body=None, token=None):
     if body:
         f = w_additional_argument(f, 'json', body)
 
-    res = f(url)
+    res = f(method, url)
 
     assert res.status_code == status_code
 
