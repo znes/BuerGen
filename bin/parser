@@ -19,10 +19,15 @@ Options:
   -h --help                  Show this screen and exit.
   -s --schema=SCHEMA         Name of the OEP schema. [default: model_draft]
   -t --table=TABLE           Name of the OEP table. [default: buergen_test]
-  -l, --loglevel=LOGLEVEL    Set the loglevel. Should be one of DEBUG, INFO,
+  -l --loglevel=LOGLEVEL     Set the loglevel. Should be one of DEBUG, INFO,
                              WARNING, ERROR or CRITICAL. [default: INFO]
+     --srid=SRID             Set the SRID for column geom. [default: 25832]
      --token=TOKEN           Authentication token provided by the OEP.
      --sep=SEP               Delimiter used in CSV-files. [default: ,]
+
+Notes:
+
+    The geometry column has to be named geom.
 
 """
 
@@ -53,7 +58,7 @@ def read_table_definition(**arguments):
 
 def read_data(**arguments):
     def read_geom(i):
-        return str(GEOSGeometry(i, srid=25832))
+        return str(GEOSGeometry(i, srid=arguments['--srid']))
     df = pd.read_csv(arguments['DATA'], dtype=str, converters={'geom': read_geom})
     return df
 
@@ -94,7 +99,7 @@ def main(**arguments):
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='parser.py v0.1')
-    logging.basicConfig(level='DEBUG')
-    logging.info('Starting parser.py!')
+    logging.basicConfig(level=arguments['--loglevel'])
+    logging.info('Starting parser!')
     main(**arguments)
     logging.info('Done!!!')
