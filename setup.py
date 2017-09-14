@@ -11,6 +11,7 @@ setup(name='buergen',
       url='https://github.com/znes/buergen',
       packages=find_packages(),
       license='',
+      scripts=['bin/parser'],
       install_requires=[
         'docopt',
         'pandas',
