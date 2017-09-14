@@ -16,4 +16,4 @@ BuerGen Command Line Scripts
 
 By installing BuerGen you can access the following CLI - scripts
 
-* parser_
+* parser
