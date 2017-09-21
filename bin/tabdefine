@@ -166,7 +166,7 @@ def main(**arguments):
                 pass
 
     # add idcolumn
-    idcolumn = {"name": "id", "data_type": "serial", "is_nullable": "NO"}
+    idcolumn = {"name": "id", "data_type": "bigserial", "is_nullable": "NO"}
     columns.append(idcolumn)
 
     # create statement
