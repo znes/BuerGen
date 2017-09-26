@@ -19,7 +19,7 @@ def yes_or_no(msg):
     prompt = " [y/n] "
 
     while True:
-        stdout.write(msg + prompt)
+        stdout.write("QUESTION: " + msg + prompt)
         choice = input().lower()
         if choice in valid:
             return valid[choice]
