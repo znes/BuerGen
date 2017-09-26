@@ -59,7 +59,7 @@ def read_table_definition(**arguments):
 def read_data(**arguments):
 
     def read_geom(i):
-        return str(GEOSGeometry(i, srid=arguments['--srid']))
+        return str(GEOSGeometry(i, srid=int(arguments['--srid'])))
 
     df = pd.read_csv(arguments['DATA'], dtype=str)
 
