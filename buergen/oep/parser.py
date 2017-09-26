@@ -46,19 +46,10 @@ class OepParser(object):
         -------
             boolean
 
-        Raises
-        ------
-        AssertionError
-            If table does not exist.
         """
 
-        # TODO: Should return False otherwise obviously
-        try:
-            request_and_response('GET', self.taburl, 200)
-            return True
-
-        except AssertionError:
-            logging.exception("Table does not exist yet.")
+        res = request_and_response('GET', self.taburl, None)
+        return True if res.status_code == 200 else False
 
     def create_table(self, body):
         """ Create empty table in OEP.
@@ -73,18 +64,11 @@ class OepParser(object):
         -------
             None
 
-        Raises
-        ------
-        AssertionError
-            Request was not successful.
         """
 
-        try:
-            request_and_response('PUT', self.taburl, 201, body=body,
-                                 token=self.token)
-
-        except AssertionError:
-            logging.exception("Oops, table could not be created.")
+        logging.info("Create table.")
+        request_and_response('PUT', self.taburl, status_code=201, body=body,
+                             token=self.token)
 
     def insert_into_table(self, body):
         """ Bulk insert new data into the table.
@@ -99,22 +83,13 @@ class OepParser(object):
         -------
             None
 
-        Raises
-        ------
-        AssertionError
-            Request was not successful.
         """
 
         call = "rows/new"
 
-        try:
-
-            request_and_response('POST', self.taburl + call, 201,
-                                 body=body, token=self.token)
-            logging.info("Successfully inserted data.")
-
-        except AssertionError:
-            logging.exception("Oops, could not insert data at index.")
+        logging.info("Insert data.")
+        request_and_response('POST', self.taburl + call, status_code=201,
+                             body=body, token=self.token)
 
     def delete_table(self):
         """ Delete table.
@@ -123,15 +98,8 @@ class OepParser(object):
         -------
             None
 
-        Raises
-        ------
-        AssertionError
-            Request was not successful.
         """
 
-        try:
-            request_and_response('DELETE', self.taburl, 200, token=self.token)
-            logging.info("Table deleted.")
-
-        except AssertionError:
-            logging.exception("Oops, could not delete table.")
+        logging.info("Delete table.")
+        request_and_response('DELETE', self.taburl, status_code=200,
+                             token=self.token)
