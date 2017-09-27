@@ -175,6 +175,8 @@ class TEXT(PGTYPE):
 
         assert isinstance(value, str)
         assert len(value) >= 50
+        assert not str.startswith(value, '{"type"')  # to filter for geometries
+        assert not value.isdigit()
 
 
 TYPES = [BOOLEAN, INTEGER, FLOAT, DECIMAL, GEOMETRY, VARCHAR, TEXT]
@@ -193,6 +195,7 @@ def main(**arguments):
             try:
                 df[name].apply(T.isvalid)
                 columns.append(T(name).asdict())
+                break
             except:
                 pass
 
