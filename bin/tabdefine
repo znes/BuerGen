@@ -33,7 +33,19 @@ import os
 
 
 class PGTYPE():
-    """ """
+    """ Base for following DATATYPE classes representing Postgres datatypes.
+
+    Attributes
+    ----------
+    name : str
+        Column name.
+
+    Raises
+    ------
+    ValueError
+        Column names should consist of letters and underscores only.
+
+    """
 
     def __init__(self, name):
 
@@ -43,6 +55,7 @@ class PGTYPE():
         self.name = name.lower()
 
     def asdict(self):
+        """ Return class attributes in a dictionary. """
         return {"name": self.name,
                 "data_type": self.data_type}
 
@@ -55,7 +68,22 @@ class BOOLEAN(PGTYPE):
 
     @classmethod
     def isvalid(cls, value):
-        assert value in ['Ja', 'ja', '1', 'Nein', 'nein', '0']
+        """ Check whether a given value fits the data_type attribute, which
+        represents a postgres datatype.
+
+        Parameters
+        ----------
+        value : unknown
+
+        Raises
+        ------
+        AssertionError
+            If value is not of postgres type boolean.
+
+        """
+        assert value in ['Ja', 'Yes', 'ja', 'yes',
+                         '1', 'Nein', 'nein', '0',
+                         'No', 'no']
 
 
 class INTEGER(PGTYPE):
