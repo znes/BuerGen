@@ -2,12 +2,12 @@
 """ Create table definition in JSON-format from CSV-file.
 
 Usage:
-  tabdefine.py [options] DATA
-  tabdefine.py -h | --help
+  tabdefine [options] DATA
+  tabdefine -h | --help
 
 Examples:
 
-  tabdefine.py path/to/table_data.csv
+  tabdefine path/to/table_data.csv
 
 Arguments:
 
@@ -18,7 +18,7 @@ Options:
   -h --help                  Show this screen and exit.
   -l --loglevel=LOGLEVEL     Set the loglevel. Should be one of DEBUG, INFO,
                              WARNING, ERROR or CRITICAL. [default: INFO]
-     --geomtype=GEOMTYPE     Set geometry type. [default: multipolygon]
+     --geomtype=GEOMTYPE     Set geometry type. [default: Multipolygon]
 
 """
 
