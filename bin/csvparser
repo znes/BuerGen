@@ -50,6 +50,7 @@ from django.contrib.gis.geos import GEOSGeometry
 
 APIURL = "http://oep.iks.cs.ovgu.de/api/v0/"
 
+
 def read_table_definition(**arguments):
     with open(arguments['DEFN'], 'r') as f:
         defn = json.load(f)
@@ -98,7 +99,6 @@ def main(**arguments):
     else:
         p.create_table(body=defn)
 
-
     data.columns = data.columns.str.lower()
     records = data.to_dict(orient='records')
     p.insert_into_table(body={'query': records})
@@ -106,7 +106,8 @@ def main(**arguments):
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='v0.1')
-    logging.basicConfig(level=arguments['--loglevel'])
+    logging.basicConfig(level=arguments['--loglevel'],
+                        format='%(levelname)s: %(message)s')
     logging.info('Starting parser!')
     main(**arguments)
     logging.info('Done!!!')
