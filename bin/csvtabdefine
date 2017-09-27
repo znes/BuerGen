@@ -177,7 +177,6 @@ class TEXT(PGTYPE):
     def isvalid(cls, value):
 
         assert isinstance(value, str)
-        assert len(value) >= 50
         assert not str.startswith(value, '{"type"')  # to filter for geometries
         assert not value.isdigit()
 
