@@ -110,4 +110,4 @@ if __name__ == '__main__':
                         format='%(levelname)s: %(message)s')
     logging.info('Starting parser!')
     main(**arguments)
-    logging.info('Done!!!')
+    logging.info('Done!')
