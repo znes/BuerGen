@@ -32,6 +32,8 @@ import logging
 import re
 import os
 
+logging.getLogger("django").setLevel(logging.CRITICAL)  # suppress django logger
+
 
 BOOLEAN_VALUES = ['Ja', 'Yes', 'ja',
                   'yes', '1', 'Nein',
@@ -217,12 +219,14 @@ def main(**arguments):
             }
         }
 
+    logging.info("Write to {name}.json!".format(name=basename))
     with open(basename + '.json', 'w') as outfile:
         json.dump(query, outfile, indent=4, sort_keys=True)
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='tabdefine v0.1')
-    logging.basicConfig(level=arguments['--loglevel'])
+    logging.basicConfig(level=arguments['--loglevel'],
+                        format='%(levelname)s: %(message)s')
     logging.info('Start!')
     main(**arguments)
     logging.info('Done!')
