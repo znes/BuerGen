@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-""" Create table definition in JSON-format from CSV-file.
+""" Create table definition in JSON-format from CSV-file. Includes some
+datatype guessing and the resulting JSON-file should be checked.
 
 Usage:
   tabdefine [options] DATA
@@ -222,6 +223,6 @@ def main(**arguments):
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='tabdefine v0.1')
     logging.basicConfig(level=arguments['--loglevel'])
-    logging.info('Starting tabdefine!')
+    logging.info('Start!')
     main(**arguments)
-    logging.info('Done!!!')
+    logging.info('Done!')
