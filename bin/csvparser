@@ -59,13 +59,31 @@ def read_table_definition(**arguments):
 
 def read_data(**arguments):
 
-    def read_geom(i):
-        return str(GEOSGeometry(i, srid=int(arguments['--srid'])))
+    def read_geom(i, clss):
+        print(i)
+        return clss(i, srid=int(arguments['--srid']))
 
     df = pd.read_csv(arguments['DATA'], dtype=str)
 
     if 'geom' in df:
-        df.geom = df.geom.apply(read_geom)
+
+        geoms = [GEOSGeometry(i, srid=int(arguments['--srid']))
+                 for i in df.geom]
+
+        # GEOSGeometry can handle geometries of different dimensions. To solve
+        # mixed entries, e.g Point/Multipoint in the geometry column, which is
+        # forbidden writing to the db, these entries have to be converted to
+        # the higher dimension. This is done on the already instantiated
+        # objects, but there should be a better way of doing this.
+        typedict = GEOSGeometry._GEOS_CLASSES
+        types = set([GEOSGeometry(i).geom_typeid for i in df.geom])
+
+        if len(types) > 1:
+            clss = typedict.get(max(types))
+            geoms = [clss(i, srid=int(arguments['--srid'])) if
+                     i.geom_typeid == min(types) else i for i in geoms]
+
+        df.geom = [str(i) for i in geoms]
 
     return df
 
