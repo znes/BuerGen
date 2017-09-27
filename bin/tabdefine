@@ -32,6 +32,11 @@ import re
 import os
 
 
+BOOLEAN_VALUES = ['Ja', 'Yes', 'ja',
+                  'yes', '1', 'Nein',
+                  'nein', '0', 'No', 'no']
+
+
 class PGTYPE():
     """ Base for following DATATYPE classes representing Postgres datatypes.
 
@@ -81,9 +86,7 @@ class BOOLEAN(PGTYPE):
             If value is not of postgres type boolean.
 
         """
-        assert value in ['Ja', 'Yes', 'ja', 'yes',
-                         '1', 'Nein', 'nein', '0',
-                         'No', 'no']
+        assert value in BOOLEAN_VALUES
 
 
 class INTEGER(PGTYPE):
@@ -153,7 +156,7 @@ class VARCHAR(PGTYPE):
 
         assert isinstance(value, str)
         assert len(value) < 50
-        assert value not in ['Ja', 'ja', '1', 'Nein', 'nein', '0']
+        assert value not in BOOLEAN_VALUES
 
     def asdict(self):
         return {"name": self.name,
