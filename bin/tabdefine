@@ -214,7 +214,7 @@ def main(**arguments):
         json.dump(query, outfile, indent=4, sort_keys=True)
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='parser.py v0.1')
+    arguments = docopt(__doc__, version='tabdefine v0.1')
     logging.basicConfig(level=arguments['--loglevel'])
     logging.info('Starting tabdefine!')
     main(**arguments)
