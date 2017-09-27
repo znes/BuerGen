@@ -2,12 +2,12 @@
 """ Parse data to the OEP
 
 Usage:
-  parser.py [options] DEFN DATA
-  parser.py -h | --help
+  csvparser [options] DEFN DATA
+  csvparser -h | --help
 
 Examples:
 
-  python parser.py -s 'schemaname' -t 'tablename' --token 11549d0315c95cd2e011569b338e19efmm4 path/to/table_definition.json path/to/table_data.csv
+  csvparser -s 'schemaname' -t 'tablename' --token 11549d0315c95cd2e011569b338e19efmm4 path/to/table_definition.json path/to/table_data.csv
 
 Arguments:
 
@@ -49,6 +49,7 @@ from django.contrib.gis.geos import GEOSGeometry
 
 
 APIURL = "http://oep.iks.cs.ovgu.de/api/v0/"
+
 
 def read_table_definition(**arguments):
     with open(arguments['DEFN'], 'r') as f:
@@ -98,15 +99,15 @@ def main(**arguments):
     else:
         p.create_table(body=defn)
 
-
     data.columns = data.columns.str.lower()
     records = data.to_dict(orient='records')
     p.insert_into_table(body={'query': records})
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='parser.py v0.1')
-    logging.basicConfig(level=arguments['--loglevel'])
+    arguments = docopt(__doc__, version='v0.1')
+    logging.basicConfig(level=arguments['--loglevel'],
+                        format='%(levelname)s: %(message)s')
     logging.info('Starting parser!')
     main(**arguments)
-    logging.info('Done!!!')
+    logging.info('Done!')

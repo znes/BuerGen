@@ -1,13 +1,14 @@
 #!/usr/bin/env python
-""" Create table definition in JSON-format from CSV-file.
+""" Create table definition in JSON-format from CSV-file. Includes some
+datatype guessing and the resulting JSON-file should be checked.
 
 Usage:
-  tabdefine.py [options] DATA
-  tabdefine.py -h | --help
+  csvtabdefine [options] DATA
+  csvtabdefine -h | --help
 
 Examples:
 
-  tabdefine.py path/to/table_data.csv
+  csvtabdefine path/to/table_data.csv
 
 Arguments:
 
@@ -18,7 +19,7 @@ Options:
   -h --help                  Show this screen and exit.
   -l --loglevel=LOGLEVEL     Set the loglevel. Should be one of DEBUG, INFO,
                              WARNING, ERROR or CRITICAL. [default: INFO]
-     --geomtype=GEOMTYPE     Set geometry type. [default: multipolygon]
+     --geomtype=GEOMTYPE     Set geometry type. [default: Multipolygon]
 
 """
 
@@ -30,6 +31,13 @@ from decimal import Decimal
 import logging
 import re
 import os
+
+logging.getLogger("django").setLevel(logging.CRITICAL)  # suppress django logger
+
+
+BOOLEAN_VALUES = ['Ja', 'Yes', 'ja',
+                  'yes', '1', 'Nein',
+                  'nein', '0', 'No', 'no']
 
 
 class PGTYPE():
@@ -81,9 +89,7 @@ class BOOLEAN(PGTYPE):
             If value is not of postgres type boolean.
 
         """
-        assert value in ['Ja', 'Yes', 'ja', 'yes',
-                         '1', 'Nein', 'nein', '0',
-                         'No', 'no']
+        assert value in BOOLEAN_VALUES
 
 
 class INTEGER(PGTYPE):
@@ -153,7 +159,7 @@ class VARCHAR(PGTYPE):
 
         assert isinstance(value, str)
         assert len(value) < 50
-        assert value not in ['Ja', 'ja', '1', 'Nein', 'nein', '0']
+        assert value not in BOOLEAN_VALUES
 
     def asdict(self):
         return {"name": self.name,
@@ -172,6 +178,8 @@ class TEXT(PGTYPE):
 
         assert isinstance(value, str)
         assert len(value) >= 50
+        assert not str.startswith(value, '{"type"')  # to filter for geometries
+        assert not value.isdigit()
 
 
 TYPES = [BOOLEAN, INTEGER, FLOAT, DECIMAL, GEOMETRY, VARCHAR, TEXT]
@@ -190,6 +198,7 @@ def main(**arguments):
             try:
                 df[name].apply(T.isvalid)
                 columns.append(T(name).asdict())
+                break
             except:
                 pass
 
@@ -210,12 +219,14 @@ def main(**arguments):
             }
         }
 
+    logging.info("Write to {name}.json!".format(name=basename))
     with open(basename + '.json', 'w') as outfile:
         json.dump(query, outfile, indent=4, sort_keys=True)
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='parser.py v0.1')
-    logging.basicConfig(level=arguments['--loglevel'])
-    logging.info('Starting tabdefine!')
+    arguments = docopt(__doc__, version='v0.1')
+    logging.basicConfig(level=arguments['--loglevel'],
+                        format='%(levelname)s: %(message)s')
+    logging.info('Start!')
     main(**arguments)
-    logging.info('Done!!!')
+    logging.info('Done!')
