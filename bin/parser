@@ -57,18 +57,24 @@ def read_table_definition(**arguments):
 
 
 def read_data(**arguments):
+
     def read_geom(i):
-        return str(GEOSGeometry(i, srid=arguments['--srid']))
-    df = pd.read_csv(arguments['DATA'], dtype=str, converters={'geom': read_geom})
+        return str(GEOSGeometry(i, srid=int(arguments['--srid'])))
+
+    df = pd.read_csv(arguments['DATA'], dtype=str)
+
+    if 'geom' in df:
+        df.geom = df.geom.apply(read_geom)
+
     return df
 
 
 def main(**arguments):
 
-    logging.info("Reading table definition.")
+    logging.info("Read table definition.")
     defn = read_table_definition(**arguments)
 
-    logging.info("Reading table data.")
+    logging.info("Read table data.")
     data = read_data(**arguments)
 
     p = OepParser(apiurl=APIURL,
@@ -76,7 +82,6 @@ def main(**arguments):
                   table=arguments['--table'],
                   token=arguments['--token'])
 
-    logging.info("Creating table.")
     if p.check_table_exists():
 
         logging.warning("Unfortunately table {} does already exist.".format(
@@ -86,12 +91,14 @@ def main(**arguments):
 
         if yes_or_no(msg):
             p.delete_table()
+            p.create_table(body=defn)
         else:
             quit()
 
-    p.create_table(body=defn)
+    else:
+        p.create_table(body=defn)
 
-    logging.info("Start inserting data.")
+
     data.columns = data.columns.str.lower()
     records = data.to_dict(orient='records')
     p.insert_into_table(body={'query': records})

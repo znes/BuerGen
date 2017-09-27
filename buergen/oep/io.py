@@ -12,7 +12,7 @@ def w_additional_argument(f, key, value):
     return wrapper
 
 
-def request_and_response(method, url, status_code, body=None, token=None):
+def request_and_response(method, url, status_code=200, body=None, token=None):
     """ Send HTTP-request to the OpenEnergyPlatform API. Returns a
         `requests.Response` object.
 
@@ -56,6 +56,17 @@ def request_and_response(method, url, status_code, body=None, token=None):
 
     res = f(method, url)
 
-    assert res.status_code == status_code
+    if status_code:
+        try:
+            assert res.status_code == status_code
+        except AssertionError:
+            logging.error("Oops, something went wrong. Trying to get why...")
+
+            try:
+                logging.error(res.json()['reason'])
+            except KeyError:
+                logging.error("Failed with no reason.")
+            finally:
+                quit()
 
     return res
