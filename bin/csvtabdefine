@@ -3,12 +3,12 @@
 datatype guessing and the resulting JSON-file should be checked.
 
 Usage:
-  tabdefine [options] DATA
-  tabdefine -h | --help
+  csvtabdefine [options] DATA
+  csvtabdefine -h | --help
 
 Examples:
 
-  tabdefine path/to/table_data.csv
+  csvtabdefine path/to/table_data.csv
 
 Arguments:
 
@@ -224,7 +224,7 @@ def main(**arguments):
         json.dump(query, outfile, indent=4, sort_keys=True)
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='tabdefine v0.1')
+    arguments = docopt(__doc__, version='v0.1')
     logging.basicConfig(level=arguments['--loglevel'],
                         format='%(levelname)s: %(message)s')
     logging.info('Start!')

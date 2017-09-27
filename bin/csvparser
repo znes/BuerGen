@@ -2,12 +2,12 @@
 """ Parse data to the OEP
 
 Usage:
-  parser.py [options] DEFN DATA
-  parser.py -h | --help
+  csvparser [options] DEFN DATA
+  csvparser -h | --help
 
 Examples:
 
-  python parser.py -s 'schemaname' -t 'tablename' --token 11549d0315c95cd2e011569b338e19efmm4 path/to/table_definition.json path/to/table_data.csv
+  csvparser -s 'schemaname' -t 'tablename' --token 11549d0315c95cd2e011569b338e19efmm4 path/to/table_definition.json path/to/table_data.csv
 
 Arguments:
 
@@ -105,7 +105,7 @@ def main(**arguments):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='parser.py v0.1')
+    arguments = docopt(__doc__, version='v0.1')
     logging.basicConfig(level=arguments['--loglevel'])
     logging.info('Starting parser!')
     main(**arguments)
