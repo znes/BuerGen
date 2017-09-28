@@ -63,7 +63,15 @@ def read_data(**arguments):
         print(i)
         return clss(i, srid=int(arguments['--srid']))
 
+    def series_to_boolean(s):
+        BOOLEAN = {'JA': True, 'ja': True, 'Ja':True,
+                'NEIN': False, 'nein': False, 'Nein':False}
+
+        cond = set(s.isin(BOOLEAN.keys())) == {True}
+        return s.replace(BOOLEAN) if cond else s
+
     df = pd.read_csv(arguments['DATA'], dtype=str)
+    df = df.apply(series_to_boolean)
 
     if 'geom' in df:
 
