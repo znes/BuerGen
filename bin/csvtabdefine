@@ -35,9 +35,7 @@ import os
 logging.getLogger("django").setLevel(logging.CRITICAL)  # suppress django logger
 
 
-BOOLEAN_VALUES = ['Ja', 'Yes', 'ja',
-                  'yes', '1', 'Nein',
-                  'nein', '0', 'No', 'no']
+BOOLEAN_VALUES = ['Ja', 'ja', 'JA', 'NEIN', 'Nein', 'nein']
 
 
 class PGTYPE():
