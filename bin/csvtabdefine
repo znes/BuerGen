@@ -56,7 +56,8 @@ class PGTYPE():
     def __init__(self, name):
 
         if not re.match("^[a-zA-Z_]*$", name):
-            raise ValueError("{} does not conform to format.".format(name))
+            logging.warning("{} does not conform to format and is not part of"
+                            " the JSON-file.".format(name))
 
         self.name = name.lower()
 
