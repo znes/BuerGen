@@ -175,12 +175,10 @@ class TEXT(PGTYPE):
     @classmethod
     def isvalid(cls, value):
 
-        assert isinstance(value, str)
-        assert not str.startswith(value, '{"type"')  # to filter for geometries
-        assert not value.isdigit()
+        pass
 
 
-TYPES = [BOOLEAN, INTEGER, FLOAT, DECIMAL, GEOMETRY, VARCHAR, TEXT]
+TYPES = [BOOLEAN, INTEGER, FLOAT, DECIMAL, GEOMETRY, VARCHAR] + [TEXT]
 
 
 def main(**arguments):
