@@ -61,6 +61,7 @@ def request_and_response(method, url, status_code=200, body=None, token=None):
             assert res.status_code == status_code
         except AssertionError:
             logging.error("Oops, something went wrong. Trying to get why...")
+            logging.debug(res)
 
             try:
                 logging.error(res.json()['reason'])

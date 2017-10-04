@@ -35,9 +35,7 @@ import os
 logging.getLogger("django").setLevel(logging.CRITICAL)  # suppress django logger
 
 
-BOOLEAN_VALUES = ['Ja', 'Yes', 'ja',
-                  'yes', '1', 'Nein',
-                  'nein', '0', 'No', 'no']
+BOOLEAN_VALUES = ['Ja', 'ja', 'JA', 'NEIN', 'Nein', 'nein']
 
 
 class PGTYPE():
@@ -58,7 +56,8 @@ class PGTYPE():
     def __init__(self, name):
 
         if not re.match("^[a-zA-Z_]*$", name):
-            raise ValueError("{} does not conform to format.".format(name))
+            logging.warning("{} does not conform to column name "
+                            "format.".format(name))
 
         self.name = name.lower()
 
@@ -176,13 +175,10 @@ class TEXT(PGTYPE):
     @classmethod
     def isvalid(cls, value):
 
-        assert isinstance(value, str)
-        assert len(value) >= 50
-        assert not str.startswith(value, '{"type"')  # to filter for geometries
-        assert not value.isdigit()
+        pass
 
 
-TYPES = [BOOLEAN, INTEGER, FLOAT, DECIMAL, GEOMETRY, VARCHAR, TEXT]
+TYPES = [BOOLEAN, INTEGER, FLOAT, DECIMAL, GEOMETRY, VARCHAR] + [TEXT]
 
 
 def main(**arguments):
