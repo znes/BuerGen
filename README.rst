@@ -1,6 +1,6 @@
 # BuerGen
-Private common project repository
 
+CLI - scripts to transfer CSV-formatted data to the OpenEnergy-Platform
 
 Installing BuerGen
 ==================
